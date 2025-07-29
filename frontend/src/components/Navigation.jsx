@@ -65,13 +65,14 @@ const Navigation = () => {
 
   const handleDownloadResume = async () => {
     try {
-      const response = await mockApi.downloadResume();
-      if (response.success) {
-        toast({
-          title: "Resume Download",
-          description: "Resume download will begin shortly...",
-        });
-      }
+      // Direct download from backend
+      const downloadUrl = `${API}/resume/download`;
+      window.open(downloadUrl, '_blank');
+      
+      toast({
+        title: "Resume Download",
+        description: "Resume download will begin shortly...",
+      });
     } catch (error) {
       toast({
         title: "Error",
