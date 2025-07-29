@@ -40,12 +40,16 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await mockApi.submitContactForm(formData);
+      const response = await axios.post(`${API}/contact`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       
-      if (response.success) {
+      if (response.data.success) {
         toast({
           title: "Message Sent Successfully!",
-          description: response.message,
+          description: response.data.message,
         });
         
         // Reset form
@@ -57,9 +61,17 @@ const Contact = () => {
         });
       }
     } catch (error) {
+      let errorMessage = "Failed to send message. Please try again.";
+      
+      if (error.response?.status === 429) {
+        errorMessage = "Too many requests. Please try again later.";
+      } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -69,14 +81,14 @@ const Contact = () => {
 
   const handleDownloadResume = async () => {
     try {
-      const response = await mockApi.downloadResume();
-      if (response.success) {
-        // In a real app, this would trigger the download
-        toast({
-          title: "Resume Download",
-          description: "Resume download will begin shortly...",
-        });
-      }
+      // Direct download from backend
+      const downloadUrl = `${API}/resume/download`;
+      window.open(downloadUrl, '_blank');
+      
+      toast({
+        title: "Resume Download",
+        description: "Resume download will begin shortly...",
+      });
     } catch (error) {
       toast({
         title: "Error",
