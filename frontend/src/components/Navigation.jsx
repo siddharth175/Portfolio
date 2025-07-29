@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, Code, Download } from 'lucide-react';
 import { Button } from './ui/button';
-import { mockApi } from '../mock';
 import { useToast } from '../hooks/use-toast';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
